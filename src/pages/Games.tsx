@@ -164,10 +164,13 @@ const Games = () => {
 
                   <CardFooter>
                     <Button
+                      asChild
                       className={`w-full btn-bouncy bg-${game.color} hover:bg-${game.color}-hover text-${game.color}-foreground`}
                     >
-                      <Play className="w-4 h-4 mr-2" />
-                      {game.progress > 0 ? "Continue" : "Start"} Game
+                      <Link to={`/games/${game.id}`}>
+                        <Play className="w-4 h-4 mr-2" />
+                        {game.progress > 0 ? "Continue" : "Start"} Game
+                      </Link>
                     </Button>
                   </CardFooter>
                 </Card>
@@ -196,3 +199,4 @@ const Games = () => {
 };
 
 export default Games;
+
