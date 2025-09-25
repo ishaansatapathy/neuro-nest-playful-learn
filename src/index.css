@@ -2,41 +2,72 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
-All colors MUST be HSL.
-*/
+@import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@300;400;500;600;700&family=Comic+Neue:wght@300;400;700&display=swap');
+
+/* NeuroNest Design System - Child-friendly, playful, and accessible */
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    /* Playful Color Palette - Soft pastels for child-friendly design */
+    --background: 54 100% 98%;
+    --foreground: 240 15% 25%;
 
     --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    --card-foreground: 240 15% 25%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
+    --popover-foreground: 240 15% 25%;
 
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
+    /* Primary - Soft Purple/Blue */
+    --primary: 260 60% 70%;
+    --primary-foreground: 0 0% 100%;
+    --primary-hover: 260 65% 65%;
 
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
+    /* Secondary - Warm Pink */
+    --secondary: 340 70% 85%;
+    --secondary-foreground: 340 60% 30%;
+    --secondary-hover: 340 75% 80%;
 
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
+    /* Accent - Sunshine Yellow */
+    --accent: 45 90% 80%;
+    --accent-foreground: 45 80% 25%;
+    --accent-hover: 45 95% 75%;
 
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+    /* Success - Mint Green */
+    --success: 150 60% 75%;
+    --success-foreground: 150 70% 25%;
 
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
+    /* Warning - Peach Orange */
+    --warning: 25 85% 75%;
+    --warning-foreground: 25 80% 25%;
 
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
+    /* Muted tones */
+    --muted: 210 30% 96%;
+    --muted-foreground: 215 16% 50%;
 
-    --radius: 0.5rem;
+    --destructive: 0 70% 65%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 210 30% 90%;
+    --input: 210 30% 94%;
+    --ring: 260 60% 70%;
+
+    --radius: 1rem;
+
+    /* Gradients for magical effects */
+    --gradient-primary: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--accent)));
+    --gradient-secondary: linear-gradient(135deg, hsl(var(--secondary)), hsl(var(--primary)));
+    --gradient-success: linear-gradient(135deg, hsl(var(--success)), hsl(var(--accent)));
+    --gradient-hero: linear-gradient(135deg, hsl(54 100% 98%), hsl(340 70% 95%), hsl(260 60% 95%));
+
+    /* Shadows for depth */
+    --shadow-soft: 0 4px 20px hsl(var(--primary) / 0.1);
+    --shadow-bouncy: 0 8px 25px hsl(var(--primary) / 0.15);
+    --shadow-magical: 0 10px 40px hsl(var(--accent) / 0.2);
+
+    /* Animation timings */
+    --bounce-duration: 0.6s;
+    --gentle-duration: 0.3s;
 
     --sidebar-background: 0 0% 98%;
 
@@ -53,36 +84,48 @@ All colors MUST be HSL.
     --sidebar-border: 220 13% 91%;
 
     --sidebar-ring: 217.2 91.2% 59.8%;
+
+    /* Animation timings */
+    --bounce-duration: 0.6s;
+    --gentle-duration: 0.3s;
   }
 
   .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
+    /* Dark mode colors */
+    --background: 240 15% 8%;
+    --foreground: 54 100% 95%;
 
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
+    --card: 240 15% 10%;
+    --card-foreground: 54 100% 95%;
 
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
+    --primary: 260 60% 75%;
+    --primary-foreground: 240 15% 15%;
+    --primary-hover: 260 65% 70%;
 
-    --primary: 210 40% 98%;
-    --primary-foreground: 222.2 47.4% 11.2%;
+    --secondary: 340 70% 90%;
+    --secondary-foreground: 340 60% 20%;
+    --secondary-hover: 340 75% 85%;
 
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
+    --accent: 45 90% 85%;
+    --accent-foreground: 45 80% 20%;
+    --accent-hover: 45 95% 80%;
 
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
+    --success: 150 60% 80%;
+    --success-foreground: 150 70% 20%;
 
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
+    --warning: 25 85% 80%;
+    --warning-foreground: 25 80% 20%;
 
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
+    --muted: 240 15% 15%;
+    --muted-foreground: 240 10% 60%;
 
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 212.7 26.8% 83.9%;
+    --destructive: 0 70% 70%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 240 15% 20%;
+    --input: 240 15% 18%;
+    --ring: 260 60% 75%;
+
     --sidebar-background: 240 5.9% 10%;
     --sidebar-foreground: 240 4.8% 95.9%;
     --sidebar-primary: 224.3 76.3% 48%;
@@ -100,6 +143,91 @@ All colors MUST be HSL.
   }
 
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground font-fredoka;
+  }
+}
+
+@layer components {
+  /* Bouncy Button Animations */
+  .btn-bouncy {
+    @apply transition-all duration-300 hover:scale-105 hover:-translate-y-1 active:scale-95;
+    box-shadow: var(--shadow-soft);
+  }
+
+  .btn-bouncy:hover {
+    box-shadow: var(--shadow-bouncy);
+  }
+
+  /* Magical Cards */
+  .card-magical {
+    @apply relative overflow-hidden rounded-3xl p-6 transition-all duration-500;
+    background: linear-gradient(135deg, rgba(255,255,255,0.9), rgba(255,255,255,0.7));
+    box-shadow: var(--shadow-soft);
+    backdrop-filter: blur(10px);
+  }
+
+  .card-magical:hover {
+    @apply -translate-y-2;
+    box-shadow: var(--shadow-magical);
+  }
+
+  /* Story Sections */
+  .story-section {
+    @apply relative py-16 px-6;
+  }
+
+  .story-section:nth-child(even) {
+    background: linear-gradient(135deg, hsl(340 70% 97%), hsl(260 60% 97%));
+  }
+
+  .story-section:nth-child(odd) {
+    background: linear-gradient(135deg, hsl(54 100% 99%), hsl(150 60% 97%));
+  }
+
+  /* Character Animations */
+  .character-bounce {
+    animation: characterBounce 2s infinite ease-in-out;
+  }
+
+  @keyframes characterBounce {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+  }
+
+  /* Level Progress Animations */
+  .level-progress {
+    @apply relative overflow-hidden rounded-full;
+    background: linear-gradient(90deg, hsl(var(--muted)), hsl(var(--muted)));
+  }
+
+  .level-progress-fill {
+    @apply h-full rounded-full transition-all duration-1000 ease-out;
+    background: var(--gradient-success);
+  }
+
+  /* Floating Elements */
+  .float-gentle {
+    animation: floatGentle 3s infinite ease-in-out;
+  }
+
+  @keyframes floatGentle {
+    0%, 100% { transform: translateY(0px) rotate(0deg); }
+    33% { transform: translateY(-8px) rotate(1deg); }
+    66% { transform: translateY(-4px) rotate(-1deg); }
+  }
+
+  /* Text Effects */
+  .text-gradient-primary {
+    background: var(--gradient-primary);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .text-gradient-secondary {
+    background: var(--gradient-secondary);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
   }
 }
