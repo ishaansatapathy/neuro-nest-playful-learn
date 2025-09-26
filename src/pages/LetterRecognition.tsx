@@ -1,112 +1,163 @@
 import { useState } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import { Progress } from "@/components/ui/progress";
-import { Heart, Trophy } from "lucide-react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { ArrowLeft, CheckCircle, XCircle, RefreshCw, ArrowRight } from "lucide-react";
+import { Link } from "react-router-dom";
 import Navigation from "@/components/Navigation";
 
-const letterQuestions = [
-  { letter: "A", options: ["A", "B", "D", "P"], correct: 0 },
-  { letter: "B", options: ["D", "B", "P", "R"], correct: 1 },
-  { letter: "C", options: ["O", "Q", "C", "G"], correct: 2 },
-  { letter: "D", options: ["B", "P", "R", "D"], correct: 3 },
-  { letter: "E", options: ["F", "E", "L", "T"], correct: 1 },
+interface Level {
+  id: number;
+  target: string;
+  options: string[];
+}
+
+// 🔤 Levels with tricky/confusing letters
+const levels: Level[] = [
+  { id: 1, target: "C", options: ["A", "B", "C", "D", "E", "F"] },
+  { id: 2, target: "B", options: ["B", "D", "P", "Q", "O", "R"] },
+  { id: 3, target: "D", options: ["B", "D", "P", "Q", "G", "O"] },
+  { id: 4, target: "P", options: ["P", "Q", "R", "B", "D", "F"] },
+  { id: 5, target: "Q", options: ["O", "Q", "C", "G", "P", "D"] },
+  { id: 6, target: "M", options: ["M", "N", "W", "V", "H", "K"] },
+  { id: 7, target: "N", options: ["N", "M", "H", "K", "W", "Z"] },
+  { id: 8, target: "E", options: ["E", "F", "L", "T", "H", "B"] },
+  { id: 9, target: "S", options: ["S", "Z", "5", "2", "C", "G"] },
+  { id: 10, target: "O", options: ["O", "Q", "C", "0", "G", "D"] },
 ];
 
 const LetterRecognition = () => {
-  const [currentQuestion, setCurrentQuestion] = useState(0);
-  const [score, setScore] = useState(0);
-  const [lives, setLives] = useState(3);
-  const [gameComplete, setGameComplete] = useState(false);
+  const [level, setLevel] = useState(1);
+  const [selected, setSelected] = useState<string | null>(null);
+  const [feedback, setFeedback] = useState<string | null>(null);
 
-  const progress = ((currentQuestion + 1) / letterQuestions.length) * 100;
-  const question = letterQuestions[currentQuestion];
+  const currentLevel = levels.find((l) => l.id === level)!;
 
-  const handleAnswer = (index: number) => {
-    if (index === question.correct) {
-      setScore(score + 1);
+  const handleSelect = (letter: string) => {
+    setSelected(letter);
+    if (letter === currentLevel.target) {
+      setFeedback("correct");
     } else {
-      setLives(lives - 1);
+      setFeedback("wrong");
     }
+  };
 
-    if (currentQuestion < letterQuestions.length - 1 && lives > 1) {
-      setCurrentQuestion(currentQuestion + 1);
-    } else {
-      setGameComplete(true);
+  const nextLevel = () => {
+    if (level < levels.length) {
+      setLevel(level + 1);
+      setSelected(null);
+      setFeedback(null);
     }
   };
 
   const resetGame = () => {
-    setCurrentQuestion(0);
-    setScore(0);
-    setLives(3);
-    setGameComplete(false);
+    setLevel(1);
+    setSelected(null);
+    setFeedback(null);
   };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-primary/5 to-accent/10">
       <Navigation />
-      <div className="pt-24 pb-12 px-4 max-w-2xl mx-auto">
-        {gameComplete ? (
-          <Card className="text-center p-8">
+
+      <div className="pt-24 pb-12 px-4">
+        <div className="max-w-4xl mx-auto">
+          {/* Back Button */}
+          <Button variant="ghost" asChild className="btn-bouncy mb-6">
+            <Link to="/games" className="flex items-center space-x-2">
+              <ArrowLeft className="w-4 h-4" />
+              <span>Back to Games</span>
+            </Link>
+          </Button>
+
+          {/* Header */}
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="text-center mb-10"
+          >
+            <h1 className="text-4xl sm:text-5xl font-bold text-gradient-primary mb-4">
+              Letter Detective
+            </h1>
+            <p className="text-lg text-muted-foreground">
+              Level {level} of {levels.length} – Find the letter{" "}
+              <span className="font-bold">{currentLevel.target}</span>
+            </p>
+          </motion.div>
+
+          {/* Game Card */}
+          <Card className="card-magical p-6 text-center">
             <CardHeader>
-              <Trophy className="w-12 h-12 mx-auto text-accent mb-4" />
-              <CardTitle className="text-3xl font-bold">
-                {lives > 0 ? "Great Job!" : "Keep Practicing!"}
-              </CardTitle>
+              <CardTitle className="text-xl">Choose the right letter</CardTitle>
             </CardHeader>
             <CardContent>
-              <p className="mb-4 text-lg">
-                Score: {score} / {letterQuestions.length}
-              </p>
-              <Button onClick={resetGame} className="btn-bouncy bg-primary text-white">
-                Play Again
-              </Button>
-            </CardContent>
-          </Card>
-        ) : (
-          <Card className="p-6">
-            <CardHeader className="text-center">
-              <CardTitle className="text-4xl font-bold mb-2">{question.letter}</CardTitle>
-              <p className="text-muted-foreground">Which letter matches?</p>
-            </CardHeader>
-            <CardContent>
-              {/* Progress + Lives */}
-              <div className="mb-6">
-                <Progress value={progress} className="h-2" />
-                <p className="text-sm text-muted-foreground mt-1">
-                  Question {currentQuestion + 1} of {letterQuestions.length}
-                </p>
-              </div>
-              <div className="flex justify-center mb-4 space-x-1">
-                {Array.from({ length: 3 }).map((_, i) => (
-                  <Heart
-                    key={i}
-                    className={`w-6 h-6 ${
-                      i < lives ? "text-red-500 fill-current" : "text-gray-300"
+              <div className="grid grid-cols-3 sm:grid-cols-6 gap-4 mb-6">
+                {currentLevel.options.map((letter) => (
+                  <motion.button
+                    key={letter}
+                    whileHover={{ scale: 1.1 }}
+                    whileTap={{ scale: 0.9 }}
+                    className={`p-6 rounded-2xl text-2xl font-bold shadow-md ${
+                      selected === letter
+                        ? "bg-primary text-white"
+                        : "bg-white text-foreground"
                     }`}
-                  />
+                    onClick={() => handleSelect(letter)}
+                  >
+                    {letter}
+                  </motion.button>
                 ))}
               </div>
 
-              {/* Options */}
-              <div className="grid grid-cols-2 gap-4">
-                {question.options.map((option, index) => (
-                  <Button
-                    key={index}
-                    onClick={() => handleAnswer(index)}
-                    className="h-16 text-2xl font-bold btn-bouncy"
-                  >
-                    {option}
-                  </Button>
-                ))}
-              </div>
+              {/* Feedback */}
+              {feedback && (
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  className="mt-6 flex flex-col items-center"
+                >
+                  {feedback === "correct" ? (
+                    <>
+                      <CheckCircle className="w-12 h-12 text-green-500 mb-2" />
+                      <p className="text-green-600 font-semibold text-lg">
+                        Great job! 🎉
+                      </p>
+                      {level < levels.length ? (
+                        <Button
+                          onClick={nextLevel}
+                          className="btn-bouncy mt-4 flex items-center space-x-2"
+                        >
+                          <span>Next Level</span>
+                          <ArrowRight className="w-4 h-4" />
+                        </Button>
+                      ) : (
+                        <Button
+                          onClick={resetGame}
+                          className="btn-bouncy mt-4 flex items-center space-x-2"
+                        >
+                          <RefreshCw className="w-4 h-4" />
+                          <span>Restart Game</span>
+                        </Button>
+                      )}
+                    </>
+                  ) : (
+                    <>
+                      <XCircle className="w-12 h-12 text-red-500 mb-2" />
+                      <p className="text-red-600 font-semibold text-lg">
+                        Oops! Try again.
+                      </p>
+                    </>
+                  )}
+                </motion.div>
+              )}
             </CardContent>
           </Card>
-        )}
+        </div>
       </div>
     </div>
   );
 };
 
 export default LetterRecognition;
+
+
