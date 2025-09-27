@@ -1,11 +1,22 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import {
+  Menu,
+  X,
+  Home,
+  Gamepad2,
+  BarChart3,
+  MessageCircle,
+  Video,
+  LogIn,
+  LogOut,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Menu, X, Home, Gamepad2, BarChart3, MessageCircle, Video, LogIn } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 
 const Navigation = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const [user, setUser] = useState<boolean>(false); // 👈 fake login state
   const location = useLocation();
 
   const navItems = [
@@ -17,6 +28,10 @@ const Navigation = () => {
   ];
 
   const isActive = (path: string) => location.pathname === path;
+
+  // ✅ Fake login/logout toggle
+  const handleLogout = () => setUser(false);
+  const handleLogin = () => setUser(true);
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 bg-background/90 backdrop-blur-md border-b border-border">
@@ -32,24 +47,22 @@ const Navigation = () => {
               <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-primary to-accent flex items-center justify-center">
                 <span className="text-white font-bold text-lg">N</span>
               </div>
-              <span className="text-xl font-bold text-gradient-primary">NeuroNest</span>
+              <span className="text-xl font-bold text-gradient-primary">
+                NeuroNest
+              </span>
             </motion.div>
           </Link>
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-1">
             {navItems.map((item) => (
-              <Link
-                key={item.name}
-                to={item.href}
-                className="relative"
-              >
+              <Link key={item.name} to={item.href} className="relative">
                 <Button
                   variant={isActive(item.href) ? "default" : "ghost"}
                   size="sm"
                   className={`btn-bouncy flex items-center space-x-2 ${
-                    isActive(item.href) 
-                      ? "bg-primary text-primary-foreground" 
+                    isActive(item.href)
+                      ? "bg-primary text-primary-foreground"
                       : "text-foreground hover:bg-muted"
                   }`}
                 >
@@ -58,18 +71,27 @@ const Navigation = () => {
                 </Button>
               </Link>
             ))}
-            
-            <Button
-              variant="secondary"
-              size="sm"
-              className="btn-bouncy bg-secondary hover:bg-secondary-hover ml-4"
-              asChild
-            >
-              <Link to="/login" className="flex items-center space-x-2">
-                <LogIn className="w-4 h-4" />
-                <span>Login</span>
-              </Link>
-            </Button>
+
+            {/* ✅ Fake auth buttons */}
+            {user ? (
+              <Button
+                variant="destructive"
+                size="sm"
+                className="btn-bouncy ml-4"
+                onClick={handleLogout}
+              >
+                <LogOut className="w-4 h-4 mr-1" /> Logout
+              </Button>
+            ) : (
+              <Button
+                variant="secondary"
+                size="sm"
+                className="btn-bouncy bg-secondary hover:bg-secondary-hover ml-4"
+                onClick={handleLogin}
+              >
+                <LogIn className="w-4 h-4 mr-1" /> Login
+              </Button>
+            )}
           </div>
 
           {/* Mobile menu button */}
@@ -106,8 +128,8 @@ const Navigation = () => {
                     <Button
                       variant={isActive(item.href) ? "default" : "ghost"}
                       className={`w-full justify-start btn-bouncy ${
-                        isActive(item.href) 
-                          ? "bg-primary text-primary-foreground" 
+                        isActive(item.href)
+                          ? "bg-primary text-primary-foreground"
                           : "text-foreground hover:bg-muted"
                       }`}
                     >
@@ -116,17 +138,33 @@ const Navigation = () => {
                     </Button>
                   </Link>
                 ))}
-                
-                <Button
-                  variant="secondary"
-                  className="w-full justify-start btn-bouncy bg-secondary hover:bg-secondary-hover mt-4"
-                  asChild
-                >
-                  <Link to="/login" onClick={() => setIsOpen(false)}>
+
+                {/* ✅ Fake auth buttons for mobile */}
+                {user ? (
+                  <Button
+                    variant="destructive"
+                    className="w-full justify-start btn-bouncy mt-4"
+                    onClick={() => {
+                      handleLogout();
+                      setIsOpen(false);
+                    }}
+                  >
+                    <LogOut className="w-4 h-4 mr-2" />
+                    Logout
+                  </Button>
+                ) : (
+                  <Button
+                    variant="secondary"
+                    className="w-full justify-start btn-bouncy bg-secondary hover:bg-secondary-hover mt-4"
+                    onClick={() => {
+                      handleLogin();
+                      setIsOpen(false);
+                    }}
+                  >
                     <LogIn className="w-4 h-4 mr-2" />
                     Login
-                  </Link>
-                </Button>
+                  </Button>
+                )}
               </div>
             </motion.div>
           )}

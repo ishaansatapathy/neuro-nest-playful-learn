@@ -19,7 +19,7 @@ import NumberMatch from "./pages/NumberMatch";
 import FocusChallenge from "./pages/FocusChallenge";
 
 // Research Pages
-import ResearchIndex from "./pages/research/Index";   // 👈 Research hub page
+import ResearchIndex from "./pages/research/Index";
 import ADHDResearch from "./pages/research/ADHD";
 import DyslexiaResearch from "./pages/research/Dyslexia";
 import DyscalculiaResearch from "./pages/research/Dyscalculia";
@@ -65,5 +65,4 @@ const App = () => (
 );
 
 export default App;
-
 
