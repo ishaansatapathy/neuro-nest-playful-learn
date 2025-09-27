@@ -12,22 +12,24 @@ const characters = [
   { id: "zoe", name: "Zoe", emoji: "👽", description: "A curious alien exploring Earth's learning!" },
 ];
 
-// Predefined responses
-const responses: Record<string, string> = {
-  hello: "Hello there! 🌟 It's so nice to meet you! I’m excited to learn and play together.",
-  hi: "Hi! 👋 How are you doing today? Ready for some fun learning?",
-  adhd: "ADHD is when the brain loves to switch channels really quickly, like a TV remote that changes fast! 📺 It can make focusing a little tricky, but it also gives kids amazing creativity, imagination, and lots of energy!",
-  dyslexia: "Dyslexia is when reading and writing feel like solving a puzzle 🧩. Letters can look jumbled or tricky, but kids with dyslexia are often great at solving problems, telling stories, and thinking in amazing creative ways!",
-  dyscalculia: "Dyscalculia makes numbers and math feel a little confusing 🔢, like they don’t want to sit in the right order. But with practice, games, and patience, kids with dyscalculia can shine bright in art, music, or other talents!",
-  math: "Math can sometimes feel like a giant puzzle 🧮. But the more you practice, the more the puzzle pieces click together — and one day, the numbers start making sense and even become fun!",
-  school: "School can sometimes feel like a big mountain ⛰️ to climb. Some days are easy and fun, and some days feel tough. But with teachers, friends, and family, every child can find their own path to the top!",
+// Predefined fake Q&A
+const knowledgeBase: Record<string, string> = {
+  hello: "Hello there! 🌟 I'm so happy to meet you. Let's have fun while learning!",
+  hi: "Hi! 👋 How are you doing today? I'm excited to play and talk with you.",
+  adhd: "ADHD means the brain changes focus quickly, like flipping TV channels 📺. Symptoms often include difficulty focusing, being forgetful, and lots of energy. But kids with ADHD are also creative, curious, and full of imagination!",
+  "adhd symptoms": "ADHD symptoms may include trouble staying focused, fidgeting, talking a lot, or forgetting instructions. ✨ But remember — every child with ADHD has unique strengths too.",
+  dyslexia: "Dyslexia is when reading feels like solving a puzzle 🧩. Letters may get mixed up, but kids with dyslexia are often amazing storytellers and problem solvers!",
+  "signs of dyslexia": "Signs include mixing up letters (like 'b' and 'd'), slow reading, or avoiding reading tasks. 🌟 But with support, children with dyslexia shine in creativity and big-picture thinking.",
+  dyscalculia: "Dyscalculia makes math confusing 🔢, like numbers don’t want to sit in the right order. But kids with dyscalculia often shine in art, music, or storytelling.",
+  "dyscalculia symptoms": "Common signs include struggling with counting, mixing up math symbols, or finding it hard to connect numbers with real-world amounts.",
+  math: "Math can feel tricky, like a giant puzzle 🧮. With practice, the pieces start to fit — and solving it can feel like magic!",
+  school: "School can sometimes feel like a tall mountain ⛰️. Some days are tough, but with teachers, parents, and friends, every child can reach the top step by step!",
 };
 
 const VideoBot = () => {
   const [selectedCharacter, setSelectedCharacter] = useState<any>(null);
   const [conversation, setConversation] = useState<string[]>([]);
   const [listening, setListening] = useState(false);
-
   const recognitionRef = useRef<any>(null);
 
   // Initialize speech recognition
@@ -44,7 +46,7 @@ const VideoBot = () => {
       recognition.onresult = (event: any) => {
         const transcript = event.results[0][0].transcript;
         setConversation((prev) => [...prev, `You: ${transcript}`]);
-        handleBotResponse(transcript);
+        handleFakeApiCall(transcript);
       };
 
       recognition.onerror = () => {
@@ -57,32 +59,40 @@ const VideoBot = () => {
     }
   }, []);
 
-  // Bot reply function
-  const handleBotResponse = (message: string) => {
-    let response = "That’s a great question! 🤔 I don’t know much about it yet, but I’ll try to learn!";
 
-    for (const keyword in responses) {
-      if (message.toLowerCase().includes(keyword)) {
-        response = responses[keyword];
-        break;
+  const handleFakeApiCall = (message: string) => {
+  
+    setConversation((prev) => [...prev, `${selectedCharacter?.name || "Bot"} is typing...`]);
+
+    setTimeout(() => {
+      
+      setConversation((prev) =>
+        prev.filter((msg) => !msg.includes("is typing..."))
+      );
+      const lowerMsg = message.toLowerCase();
+      let response = "That’s a great question! 🤔 I don’t know much about it yet, but I’ll try to learn!";
+
+      for (const keyword in knowledgeBase) {
+        if (lowerMsg.includes(keyword)) {
+          response = knowledgeBase[keyword];
+          break;
+        }
       }
-    }
 
-    // ✅ Always show correct character name (fallback to "Bot")
-    const botName = selectedCharacter?.name || "Bot";
+      const botName = selectedCharacter?.name || "Bot";
+      setConversation((prev) => [...prev, `${botName}: ${response}`]);
 
-    setConversation((prev) => [...prev, `${botName}: ${response}`]);
-
-    // Speak response
-    const utterance = new SpeechSynthesisUtterance(response);
-    utterance.lang = "en-US";
-    speechSynthesis.speak(utterance);
+      const utterance = new SpeechSynthesisUtterance(response);
+      utterance.lang = "en-US";
+      utterance.pitch = 1.1;
+      utterance.rate = 0.95;
+      speechSynthesis.speak(utterance);
+    }, 800); 
   };
 
   // Toggle mic
   const toggleMic = () => {
     if (!selectedCharacter) return;
-
     if (!listening) {
       setListening(true);
       recognitionRef.current?.start();
@@ -142,7 +152,7 @@ const VideoBot = () => {
             {/* Conversation */}
             <div className="mt-6 h-64 overflow-y-auto bg-muted/30 p-4 rounded-xl text-left">
               {conversation.map((msg, i) => (
-                <p key={i} className="mb-2 text-sm">
+                <p key={i} className="mb-2 text-sm whitespace-pre-line">
                   {msg}
                 </p>
               ))}
@@ -165,4 +175,3 @@ const VideoBot = () => {
 };
 
 export default VideoBot;
-
