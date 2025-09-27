@@ -18,6 +18,12 @@ import LetterRecognition from "./pages/LetterRecognition";
 import NumberMatch from "./pages/NumberMatch";
 import FocusChallenge from "./pages/FocusChallenge";
 
+// Research Pages
+import ResearchIndex from "./pages/research/Index";   // 👈 Research hub page
+import ADHDResearch from "./pages/research/ADHD";
+import DyslexiaResearch from "./pages/research/Dyslexia";
+import DyscalculiaResearch from "./pages/research/Dyscalculia";
+
 const queryClient = new QueryClient();
 
 const App = () => (
@@ -44,6 +50,12 @@ const App = () => (
           <Route path="/games/number-match" element={<NumberMatch />} />
           <Route path="/games/focus-challenge" element={<FocusChallenge />} />
 
+          {/* Research Hub + Individual Pages */}
+          <Route path="/research" element={<ResearchIndex />} />
+          <Route path="/research/adhd" element={<ADHDResearch />} />
+          <Route path="/research/dyslexia" element={<DyslexiaResearch />} />
+          <Route path="/research/dyscalculia" element={<DyscalculiaResearch />} />
+
           {/* Catch-All */}
           <Route path="*" element={<NotFound />} />
         </Routes>
@@ -53,4 +65,5 @@ const App = () => (
 );
 
 export default App;
+
 
