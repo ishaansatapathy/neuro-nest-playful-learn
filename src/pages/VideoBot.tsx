@@ -14,13 +14,13 @@ const characters = [
 
 // Predefined responses
 const responses: Record<string, string> = {
-  hello: "Hello there! It's so nice to meet you!",
-  hi: "Hi! How are you doing today?",
-  adhd: "ADHD means the brain likes to switch channels quickly, making focus tricky but creativity amazing!",
-  dyslexia: "Dyslexia makes reading harder, but it often comes with strong problem-solving and imagination skills.",
-  dyscalculia: "Dyscalculia makes math feel confusing, but with practice and support, kids can shine in other areas too!",
-  math: "Math can feel like a puzzle, but with practice, every piece starts to fit!",
-  school: "School can sometimes be hard, but teachers and friends can make the journey fun!",
+  hello: "Hello there! 🌟 It's so nice to meet you! I’m excited to learn and play together.",
+  hi: "Hi! 👋 How are you doing today? Ready for some fun learning?",
+  adhd: "ADHD is when the brain loves to switch channels really quickly, like a TV remote that changes fast! 📺 It can make focusing a little tricky, but it also gives kids amazing creativity, imagination, and lots of energy!",
+  dyslexia: "Dyslexia is when reading and writing feel like solving a puzzle 🧩. Letters can look jumbled or tricky, but kids with dyslexia are often great at solving problems, telling stories, and thinking in amazing creative ways!",
+  dyscalculia: "Dyscalculia makes numbers and math feel a little confusing 🔢, like they don’t want to sit in the right order. But with practice, games, and patience, kids with dyscalculia can shine bright in art, music, or other talents!",
+  math: "Math can sometimes feel like a giant puzzle 🧮. But the more you practice, the more the puzzle pieces click together — and one day, the numbers start making sense and even become fun!",
+  school: "School can sometimes feel like a big mountain ⛰️ to climb. Some days are easy and fun, and some days feel tough. But with teachers, friends, and family, every child can find their own path to the top!",
 };
 
 const VideoBot = () => {
@@ -59,7 +59,7 @@ const VideoBot = () => {
 
   // Bot reply function
   const handleBotResponse = (message: string) => {
-    let response = "Hmm, I don’t know that yet, but I’ll try to learn!";
+    let response = "That’s a great question! 🤔 I don’t know much about it yet, but I’ll try to learn!";
 
     for (const keyword in responses) {
       if (message.toLowerCase().includes(keyword)) {
@@ -68,7 +68,10 @@ const VideoBot = () => {
       }
     }
 
-    setConversation((prev) => [...prev, `${selectedCharacter?.name}: ${response}`]);
+    // ✅ Always show correct character name (fallback to "Bot")
+    const botName = selectedCharacter?.name || "Bot";
+
+    setConversation((prev) => [...prev, `${botName}: ${response}`]);
 
     // Speak response
     const utterance = new SpeechSynthesisUtterance(response);
@@ -162,3 +165,4 @@ const VideoBot = () => {
 };
 
 export default VideoBot;
+

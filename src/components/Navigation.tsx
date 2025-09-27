@@ -8,16 +8,15 @@ import {
   BarChart3,
   MessageCircle,
   Video,
-  LogIn,
   LogOut,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 
 const Navigation = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const [user, setUser] = useState<boolean>(false); // 👈 fake login state
   const location = useLocation();
+  const navigate = useNavigate();
 
   const navItems = [
     { name: "Home", href: "/", icon: Home },
@@ -29,9 +28,11 @@ const Navigation = () => {
 
   const isActive = (path: string) => location.pathname === path;
 
-  // ✅ Fake login/logout toggle
-  const handleLogout = () => setUser(false);
-  const handleLogin = () => setUser(true);
+  // Fake logout for demo
+  const handleFakeLogout = () => {
+    alert("Demo logout: session cleared (fake). Redirecting to login page...");
+    navigate("/login");
+  };
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 bg-background/90 backdrop-blur-md border-b border-border">
@@ -72,26 +73,15 @@ const Navigation = () => {
               </Link>
             ))}
 
-            {/* ✅ Fake auth buttons */}
-            {user ? (
-              <Button
-                variant="destructive"
-                size="sm"
-                className="btn-bouncy ml-4"
-                onClick={handleLogout}
-              >
-                <LogOut className="w-4 h-4 mr-1" /> Logout
-              </Button>
-            ) : (
-              <Button
-                variant="secondary"
-                size="sm"
-                className="btn-bouncy bg-secondary hover:bg-secondary-hover ml-4"
-                onClick={handleLogin}
-              >
-                <LogIn className="w-4 h-4 mr-1" /> Login
-              </Button>
-            )}
+            {/* Always Logout (demo) */}
+            <Button
+              variant="destructive"
+              size="sm"
+              className="btn-bouncy ml-4"
+              onClick={handleFakeLogout}
+            >
+              <LogOut className="w-4 h-4 mr-1" /> Logout
+            </Button>
           </div>
 
           {/* Mobile menu button */}
@@ -139,32 +129,17 @@ const Navigation = () => {
                   </Link>
                 ))}
 
-                {/* ✅ Fake auth buttons for mobile */}
-                {user ? (
-                  <Button
-                    variant="destructive"
-                    className="w-full justify-start btn-bouncy mt-4"
-                    onClick={() => {
-                      handleLogout();
-                      setIsOpen(false);
-                    }}
-                  >
-                    <LogOut className="w-4 h-4 mr-2" />
-                    Logout
-                  </Button>
-                ) : (
-                  <Button
-                    variant="secondary"
-                    className="w-full justify-start btn-bouncy bg-secondary hover:bg-secondary-hover mt-4"
-                    onClick={() => {
-                      handleLogin();
-                      setIsOpen(false);
-                    }}
-                  >
-                    <LogIn className="w-4 h-4 mr-2" />
-                    Login
-                  </Button>
-                )}
+                {/* Always Logout (mobile demo) */}
+                <Button
+                  variant="destructive"
+                  className="w-full justify-start btn-bouncy mt-4"
+                  onClick={() => {
+                    setIsOpen(false);
+                    handleFakeLogout();
+                  }}
+                >
+                  <LogOut className="w-4 h-4 mr-2" /> Logout
+                </Button>
               </div>
             </motion.div>
           )}
