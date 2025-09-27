@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import {
@@ -21,10 +22,79 @@ import {
 import { Link } from "react-router-dom";
 import Navigation from "@/components/Navigation";
 
-const Reports = () => {
-  const childName = "Alex"; // ✅ Mock child name for demo
+// Mock child name
+const childName = "Alex";
 
-  // Mock handler for download
+// ✅ Mock scores from games
+const mockScores = {
+  letterRecognition: 65,
+  numberMatch: 80,
+  focusChallenge: 50,
+  confusions: ["b/d", "p/q"], // observed confusion patterns
+};
+
+const analyzeScores = (scores: typeof mockScores) => {
+  const strengths: { skill: string; score: number }[] = [];
+  const practiceAreas: { skill: string; games: number; difficulty: string }[] =
+    [];
+  const concerns: { title: string; description: string; suggestion: string }[] =
+    [];
+
+  // Strengths
+  if (scores.numberMatch >= 75)
+    strengths.push({ skill: "Number Sequencing", score: scores.numberMatch });
+  if (scores.letterRecognition >= 75)
+    strengths.push({
+      skill: "Letter Recognition",
+      score: scores.letterRecognition,
+    });
+  if (scores.focusChallenge >= 75)
+    strengths.push({ skill: "Focus & Attention", score: scores.focusChallenge });
+
+  // Practice areas
+  if (scores.letterRecognition < 75)
+    practiceAreas.push({
+      skill: "Letter Recognition",
+      games: 5,
+      difficulty: "Medium",
+    });
+  if (scores.numberMatch < 75)
+    practiceAreas.push({
+      skill: "Number Sequencing",
+      games: 3,
+      difficulty: "Easy",
+    });
+  if (scores.focusChallenge < 75)
+    practiceAreas.push({
+      skill: "Focus Training",
+      games: 4,
+      difficulty: "Medium",
+    });
+
+  // Concerns
+  if (scores.confusions.includes("b/d") || scores.confusions.includes("p/q")) {
+    concerns.push({
+      title: "Letter Confusion Patterns",
+      description:
+        "Frequent confusion between 'b', 'd', 'p', and 'q' observed in games.",
+      suggestion: "Consider: Vision screening",
+    });
+  }
+  if (scores.focusChallenge < 60) {
+    concerns.push({
+      title: "Focus Variability",
+      description:
+        "Attention spans vary significantly across different activities.",
+      suggestion: "Consider: ADHD assessment",
+    });
+  }
+
+  return { strengths, practiceAreas, concerns };
+};
+
+const Reports = () => {
+  const { strengths, practiceAreas, concerns } = analyzeScores(mockScores);
+
   const handleDownload = () => {
     alert("📄 PDF download coming soon!");
   };
@@ -106,32 +176,34 @@ const Reports = () => {
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-4">
-                  {[
-                    { skill: "Creative Problem Solving", score: 95 },
-                    { skill: "Visual Pattern Recognition", score: 88 },
-                    { skill: "Spatial Reasoning", score: 92 },
-                  ].map((strength, index) => (
-                    <div key={index} className="space-y-2">
-                      <div className="flex items-center justify-between">
-                        <Link
-                          to="/games"
-                          className="text-sm font-medium hover:underline cursor-pointer"
-                        >
-                          {strength.skill}
-                        </Link>
-                        <div className="flex items-center space-x-1">
-                          <Star className="w-4 h-4 text-accent fill-accent" />
-                          <span className="text-sm font-bold">
-                            {strength.score}%
-                          </span>
+                  {strengths.length > 0 ? (
+                    strengths.map((strength, index) => (
+                      <div key={index} className="space-y-2">
+                        <div className="flex items-center justify-between">
+                          <Link
+                            to="/games"
+                            className="text-sm font-medium hover:underline cursor-pointer"
+                          >
+                            {strength.skill}
+                          </Link>
+                          <div className="flex items-center space-x-1">
+                            <Star className="w-4 h-4 text-accent fill-accent" />
+                            <span className="text-sm font-bold">
+                              {strength.score}%
+                            </span>
+                          </div>
                         </div>
+                        <Progress
+                          value={strength.score}
+                          className="level-progress"
+                        />
                       </div>
-                      <Progress
-                        value={strength.score}
-                        className="level-progress"
-                      />
-                    </div>
-                  ))}
+                    ))
+                  ) : (
+                    <p className="text-muted-foreground text-sm">
+                      No major strengths detected yet. Keep practicing!
+                    </p>
+                  )}
                 </CardContent>
               </Card>
             </motion.div>
@@ -155,32 +227,36 @@ const Reports = () => {
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-4">
-                  {[
-                    { skill: "Letter Recognition", games: 5, difficulty: "Medium" },
-                    { skill: "Number Sequencing", games: 3, difficulty: "Easy" },
-                    { skill: "Focus Training", games: 4, difficulty: "Easy" },
-                  ].map((area, index) => (
-                    <div key={index} className="p-4 bg-warning/10 rounded-xl">
-                      <div className="flex items-center justify-between mb-2">
-                        <span className="font-medium">{area.skill}</span>
-                        <Badge variant="outline">{area.difficulty}</Badge>
+                  {practiceAreas.length > 0 ? (
+                    practiceAreas.map((area, index) => (
+                      <div key={index} className="p-4 bg-warning/10 rounded-xl">
+                        <div className="flex items-center justify-between mb-2">
+                          <span className="font-medium">{area.skill}</span>
+                          <Badge variant="outline">{area.difficulty}</Badge>
+                        </div>
+                        <p className="text-sm text-muted-foreground">
+                          {area.games} recommended games available
+                        </p>
                       </div>
-                      <p className="text-sm text-muted-foreground">
-                        {area.games} recommended games available
-                      </p>
-                    </div>
-                  ))}
-                  <Button
-                    className="w-full btn-bouncy bg-warning hover:bg-warning/80 text-warning-foreground"
-                    asChild
-                  >
-                    <Link to="/games">Practice Now</Link>
-                  </Button>
+                    ))
+                  ) : (
+                    <p className="text-muted-foreground text-sm">
+                      No practice areas detected. Keep up the great work!
+                    </p>
+                  )}
+                  {practiceAreas.length > 0 && (
+                    <Button
+                      className="w-full btn-bouncy bg-warning hover:bg-warning/80 text-warning-foreground"
+                      asChild
+                    >
+                      <Link to="/games">Practice Now</Link>
+                    </Button>
+                  )}
                 </CardContent>
               </Card>
             </motion.div>
 
-            {/* Possible Concerns */}
+            {/* Concerns */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -199,37 +275,35 @@ const Reports = () => {
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-4">
-                  <div className="p-4 bg-destructive/10 rounded-xl">
-                    <h4 className="font-medium mb-2">
-                      Letter Confusion Patterns
-                    </h4>
-                    <p className="text-sm text-muted-foreground mb-3">
-                      Frequent confusion between 'b', 'd', 'p', and 'q' observed
-                      in games.
+                  {concerns.length > 0 ? (
+                    concerns.map((concern, index) => (
+                      <div
+                        key={index}
+                        className="p-4 bg-destructive/10 rounded-xl"
+                      >
+                        <h4 className="font-medium mb-2">{concern.title}</h4>
+                        <p className="text-sm text-muted-foreground mb-3">
+                          {concern.description}
+                        </p>
+                        <Badge variant="secondary" className="text-xs">
+                          {concern.suggestion}
+                        </Badge>
+                      </div>
+                    ))
+                  ) : (
+                    <p className="text-muted-foreground text-sm">
+                      No major concerns detected. Your child is on track!
                     </p>
-                    <Badge variant="secondary" className="text-xs">
-                      Consider: Vision screening
-                    </Badge>
-                  </div>
-
-                  <div className="p-4 bg-muted/50 rounded-xl">
-                    <h4 className="font-medium mb-2">Focus Variability</h4>
-                    <p className="text-sm text-muted-foreground mb-3">
-                      Attention spans vary significantly across different
-                      activities.
-                    </p>
-                    <Badge variant="secondary" className="text-xs">
-                      Consider: ADHD assessment
-                    </Badge>
-                  </div>
-
-                  <Button
-                    variant="outline"
-                    className="w-full btn-bouncy border-destructive text-destructive hover:bg-destructive hover:text-destructive-foreground"
-                    asChild
-                  >
-                    <Link to="/parent-chat">Discuss with Expert</Link>
-                  </Button>
+                  )}
+                  {concerns.length > 0 && (
+                    <Button
+                      variant="outline"
+                      className="w-full btn-bouncy border-destructive text-destructive hover:bg-destructive hover:text-destructive-foreground"
+                      asChild
+                    >
+                      <Link to="/parent-chat">Discuss with Expert</Link>
+                    </Button>
+                  )}
                 </CardContent>
               </Card>
             </motion.div>
@@ -243,7 +317,7 @@ const Reports = () => {
             className="mt-8 p-6 bg-accent/20 rounded-3xl text-center"
           >
             <h3 className="text-lg font-semibold text-accent-foreground mb-2">
-              📊 Personalized reports coming soon!
+               Personalized reports coming soon!
             </h3>
             <p className="text-sm text-muted-foreground">
               Connect to Supabase to save and track your child's progress over
@@ -257,3 +331,4 @@ const Reports = () => {
 };
 
 export default Reports;
+ 
