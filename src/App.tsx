@@ -17,6 +17,7 @@ import NotFound from "./pages/NotFound";
 import LetterRecognition from "./pages/LetterRecognition";
 import NumberMatch from "./pages/NumberMatch";
 import FocusChallenge from "./pages/FocusChallenge";
+import NumberTracing from "./pages/NumberTracingGame";  // ✅ NEW
 
 // Research Pages
 import ResearchIndex from "./pages/research/Index";
@@ -49,6 +50,7 @@ const App = () => (
           <Route path="/games/letter-recognition" element={<LetterRecognition />} />
           <Route path="/games/number-match" element={<NumberMatch />} />
           <Route path="/games/focus-challenge" element={<FocusChallenge />} />
+          <Route path="/games/number-tracing" element={<NumberTracing />} /> {/* ✅ NEW */}
 
           {/* Research Hub + Individual Pages */}
           <Route path="/research" element={<ResearchIndex />} />
@@ -65,4 +67,3 @@ const App = () => (
 );
 
 export default App;
-

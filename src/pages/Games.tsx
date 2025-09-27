@@ -1,9 +1,16 @@
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
-import { Play, Star, Trophy, Clock, ArrowLeft } from "lucide-react";
+import { Play, Star, Trophy, Clock, ArrowLeft, Pencil } from "lucide-react";
 import { Link } from "react-router-dom";
 import Navigation from "@/components/Navigation";
 
@@ -16,7 +23,7 @@ interface Game {
   progress: number;
   stars: number;
   timeEstimate: string;
-  color: "primary" | "secondary" | "accent";
+  color: "primary" | "secondary" | "accent" | "pink";
 }
 
 const games: Game[] = [
@@ -53,13 +60,24 @@ const games: Game[] = [
     timeEstimate: "6 min",
     color: "accent",
   },
+  {
+    id: "number-tracing",
+    title: "✍️ Number Tracing",
+    description: "Trace numbers step by step and improve handwriting skills.",
+    difficulty: "Easy",
+    category: "Numbers",
+    progress: 0,
+    stars: 0,
+    timeEstimate: "7 min",
+    color: "pink",
+  },
 ];
 
 const Games = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-primary/5 to-accent/10">
       <Navigation />
-      
+
       <div className="pt-24 pb-12 px-4">
         <div className="max-w-6xl mx-auto">
           {/* Back Button */}
@@ -86,7 +104,8 @@ const Games = () => {
               Learning Games
             </h1>
             <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-              Play, learn, and discover your unique superpowers through fun activities!
+              Play, learn, and discover your unique superpowers through fun
+              activities!
             </p>
           </motion.div>
 
@@ -105,7 +124,9 @@ const Games = () => {
               </div>
             </div>
             <Progress value={68} className="level-progress mb-2" />
-            <p className="text-sm text-muted-foreground">68% complete to next level</p>
+            <p className="text-sm text-muted-foreground">
+              68% complete to next level
+            </p>
           </motion.div>
 
           {/* Games Grid */}
@@ -116,12 +137,12 @@ const Games = () => {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.1 * (index + 2) }}
-                whileHover={{ y: -5 }}
+                whileHover={{ y: -5, scale: 1.02 }}
               >
                 <Card className="card-magical h-full">
                   <CardHeader>
                     <div className="flex items-center justify-between mb-2">
-                      <Badge 
+                      <Badge
                         variant="secondary"
                         className={`bg-${game.color}/20 text-${game.color}-foreground`}
                       >
@@ -132,8 +153,8 @@ const Games = () => {
                           <Star
                             key={i}
                             className={`w-4 h-4 ${
-                              i < game.stars 
-                                ? "text-accent fill-accent" 
+                              i < game.stars
+                                ? "text-accent fill-accent"
                                 : "text-muted-foreground"
                             }`}
                           />
@@ -156,7 +177,9 @@ const Games = () => {
                     <div>
                       <div className="flex items-center justify-between mb-2">
                         <span className="text-sm font-medium">Progress</span>
-                        <span className="text-sm text-muted-foreground">{game.progress}%</span>
+                        <span className="text-sm text-muted-foreground">
+                          {game.progress}%
+                        </span>
                       </div>
                       <Progress value={game.progress} className="level-progress" />
                     </div>
@@ -168,7 +191,11 @@ const Games = () => {
                       className={`w-full btn-bouncy bg-${game.color} hover:bg-${game.color}-hover text-${game.color}-foreground`}
                     >
                       <Link to={`/games/${game.id}`}>
-                        <Play className="w-4 h-4 mr-2" />
+                        {game.id === "number-tracing" ? (
+                          <Pencil className="w-4 h-4 mr-2" />
+                        ) : (
+                          <Play className="w-4 h-4 mr-2" />
+                        )}
                         {game.progress > 0 ? "Continue" : "Start"} Game
                       </Link>
                     </Button>
@@ -189,7 +216,8 @@ const Games = () => {
               🎮 More games coming soon!
             </h3>
             <p className="text-sm text-muted-foreground">
-              We're constantly adding new activities tailored to different learning styles.
+              We're constantly adding new activities tailored to different
+              learning styles.
             </p>
           </motion.div>
         </div>
@@ -199,4 +227,3 @@ const Games = () => {
 };
 
 export default Games;
-
